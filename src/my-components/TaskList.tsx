@@ -1,6 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Task } from "@/App";
+import { deleteTask } from "@/lib/db";
+import { Task } from "@/types";
 import { Trash2 } from "lucide-react";
 
 interface TaskListProps {
@@ -12,6 +13,7 @@ function TaskList(props: TaskListProps) {
 
     const handleRemoveTask = (id: string) => {
         props.setTasks(prev => prev.filter(task => task.id !== id));
+        deleteTask(id);
     }
 
     return (

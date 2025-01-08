@@ -34,6 +34,11 @@
       "icons/icon.ico"
     ]
   },
+  "plugins": {
+    "sql": {
+      "preload": ["sqlite:tasks.db"]
+    }
+  },
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",

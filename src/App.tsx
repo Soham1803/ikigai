@@ -5,13 +5,8 @@ import { getDay } from "date-fns";
 import Carousel from "./my-components/Carousel3D";
 import { CalendarRange, ChartLine, House, NotebookText, Plus, User } from "lucide-react";
 import TaskList from "./my-components/TaskList";
-
-export interface Task {
-  id: string;
-  title: string;
-  status: string;
-  completed: boolean;
-}
+import { Task } from "@/types"
+import { createTable, insertTask } from "./lib/db";
 
 function App() {
  
@@ -19,9 +14,23 @@ function App() {
   const [currDate, setCurrDate] = useState<Date>(today);
   const [tasks, setTasks] = useState<Task[]>([]);
 
+  const initDb = async () => {
+    try {
+      const db = await createTable();
+      console.log("DB: ", db);
+    } catch(error) {
+      console.error("Error creating table", error);
+    }
+  }
+  
+  useEffect(() => {
+    initDb();
+  }, []);
+
   const handleTaskAdd = () => {
     
     setTasks(prev => [...prev, {id: tasks.length.toString(), title: "New Task", status: "In Progress", completed: false}]);
+    insertTask({id: tasks.length.toString(), title: "New Task", status: "In Progress", completed: false});
   }
   
   const monthNames = [

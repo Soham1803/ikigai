@@ -15,7 +15,8 @@
         "title": "ikigai",
         "width": 390,
         "height": 850,
-        "transparent": true
+        "transparent": true,
+        "decorations": false
       }
     ],
     "security": {

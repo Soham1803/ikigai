@@ -1,45 +1,65 @@
-// import { useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import { invoke } from "@tauri-apps/api/core";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
-import { Textarea } from "@/components/ui/textarea"
+import { cn } from "./lib/utils";
+import { getDay } from "date-fns";
+import Carousel from "./my-components/Carousel3D";
+import { CalendarRange, ChartLine, House, NotebookText, Plus, User } from "lucide-react";
+import TaskList from "./my-components/TaskList";
 
+export interface Task {
+  id: string;
+  title: string;
+  status: string;
+  completed: boolean;
+}
 
 function App() {
+ 
+  const today = new Date();
+  const [currDate, setCurrDate] = useState<Date>(today);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  // async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    // setGreetMsg(await invoke("greet", { name }));
-  // }
+  const handleTaskAdd = () => {
+    
+    setTasks(prev => [...prev, {id: tasks.length.toString(), title: "New Task", status: "In Progress", completed: false}]);
+  }
+  
+  const monthNames = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+  
+  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; 
+
+  const items = Array.from({length: 5}).map((_, index) => (
+    <div key={index} className="flex flex-col w-full h-full items-center justify-evenly p-2 text-4xl font-bold">
+        <h2 className="text-2xl">{weekDays[getDay(currDate)]}</h2>
+        <h1 className="text-6xl">{currDate.getDate()}</h1>
+        <h2 className="text-2xl">{monthNames[currDate.getMonth()]}</h2>
+    </div>));
+
 
   return (
-    <main className="flex flex-col justify-start items-center w-full h-full">
-      {/* Show dates */}
-      <div className="w-full bg-red-500 h-1/4 overflow-x-scroll mt-10">
-        <div className="flex flex-row justify-evenly items-center gap-2 min-w-max h-full py-2" >
-          {Array.from({length: 5}, (i: number, _) => (
-            <div className="w-[100px] h-full bg-red-600">
-              <h1>Day {_+1}</h1>
-            </div> 
-          ))}
-        </div> 
-      </div>
-
-      {/* Show time slots */}
-      <div className="flex flex-col items-center justify-evenly w-full h-3/4 overflow-y-scroll">
-        <div className="flex flex-box items-center justify-evenly w-[90%] h-[90%] p-3 rounded-lg border-white border-2">
-          <Textarea className="p-4 border-2" placeholder="Task Name"/>
-          
-          
+    <main className="flex flex-col justify-between items-center w-full h-full overflow-hidden backdrop-blur-3xl ">
+      <div className="w-full h-1/4 mt-10">
+        <div className="flex flex-row justify-between items-center gap-1 w-screen h-full">
+          <Carousel items={items} setCurrDate={setCurrDate} />
         </div>
       </div>
 
-      {/* Deck  */}
-      <div className="w-full h-1/6 bg-blue-500">
-        <div className="flex flex-row justify-evenly items-center gap-2 min-w-max h-full py-2" >
-          
+      <TaskList tasks={tasks} setTasks={setTasks} />
+
+      <div className="relative flex flex-row items-center justify-between px-8 w-full h-[8%] bg-blue-500 rounded-3xl">
+        <div onClick={handleTaskAdd} className="absolute -top-8 left-1/2 -translate-x-1/2 flex items-center justify-center p-4 rounded-full bg-blue-500 border-4 border-black hover:bg-blue-400 active:bg-blue-300">
+          <Plus />
         </div>
+        <House />
+        <CalendarRange />
+        <div />
+        <ChartLine />
+        <User />
       </div>
+      
     </main>
   );
 }

@@ -11,6 +11,8 @@
   color: #0f0f0f;
   background-color: #1e1e1e;
   background-image: linear-gradient(180deg, #000000 30%, #303030 100%);
+  /* background: transparent; */
+  border-radius: 50%;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -37,7 +39,8 @@ body {
     color: #f6f6f6;
     background-color: #1e1e1e;
     background-image: linear-gradient(180deg, #000000 30%, #303030 100%);;
-  
+    /* background: transparent;   */
+    border-radius: 20px;
   }
 
 }

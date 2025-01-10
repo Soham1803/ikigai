@@ -40,10 +40,11 @@ function App() {
     }
   }
 
-  const handleTaskAdd = () => {
+  const handleTaskAdd = async () => {
     
-    setTasks(prev => [...prev, {id: tasks.length.toString(), title: "New Task", date: currDate.toISOString+"", status: "In Progress", completed: false}]);
-    insertTask({title: "New Task", date: currDate.toISOString+"", status: "In Progress", completed: false});
+    // setTasks(prev => [...prev, {title: "New Task", date: currDate.toISOString+"", status: "In Progress", completed: false}]);
+    await insertTask({title: "New Task", date: currDate.toISOString+"", status: "In Progress", completed: false});
+    fetchTasks();
   }
   
   useEffect(() => {

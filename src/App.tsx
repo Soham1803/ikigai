@@ -3,10 +3,10 @@ import "./App.css";
 import { cn } from "./lib/utils";
 import { getDay } from "date-fns";
 import Carousel from "./my-components/Carousel3D";
-import { CalendarRange, ChartLine, House, NotebookText, Plus, User } from "lucide-react";
+import { CalendarRange, ChartLine, House, Plus, User } from "lucide-react";
 import TaskList from "./my-components/TaskList";
 import { Task } from "@/types"
-import { createTable, insertTask } from "./lib/db";
+import { createTable, insertTask, getTasks, clearTasks } from "./lib/db";
 
 function App() {
  
@@ -16,22 +16,44 @@ function App() {
 
   const initDb = async () => {
     try {
-      const db = await createTable();
-      console.log("DB: ", db);
+      await createTable();
     } catch(error) {
       console.error("Error creating table", error);
     }
   }
+
+  const fetchTasks = async () => {
+    try {
+      const tasks = await getTasks() as Task[];
+      setTasks(tasks);
+      console.log("Tasks: ", tasks);
+    } catch(error) {
+      console.error("Error fetching tasks", error);
+    }
+  }
+
+  const vacantTasks = async () => {
+    try {
+      await clearTasks();
+    } catch(error) {
+      console.error("Error clearing tasks", error);
+    }
+  }
+
+  const handleTaskAdd = async () => {
+    
+    // setTasks(prev => [...prev, {title: "New Task", date: currDate.toISOString+"", status: "In Progress", completed: false}]);
+    await insertTask({title: "New Task", date: currDate.toISOString+"", status: "In Progress", completed: false});
+    fetchTasks();
+  }
   
   useEffect(() => {
     initDb();
+    // vacantTasks();
+    fetchTasks();
+    // deleteTable();
   }, []);
 
-  const handleTaskAdd = () => {
-    
-    setTasks(prev => [...prev, {id: tasks.length.toString(), title: "New Task", status: "In Progress", completed: false}]);
-    insertTask({id: tasks.length.toString(), title: "New Task", status: "In Progress", completed: false});
-  }
   
   const monthNames = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",

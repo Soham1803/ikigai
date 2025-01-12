@@ -8,6 +8,8 @@ import TaskList from "./my-components/TaskList";
 import { Task } from "@/types"
 import { createTable, insertTask } from "./lib/db";
 
+import { signInWithGoogle } from "@/firebase/google-signin"
+
 function App() {
  
   const today = new Date();
@@ -26,6 +28,10 @@ function App() {
   useEffect(() => {
     initDb();
   }, []);
+
+  const handleSiginIn = () => {
+    signInWithGoogle();
+  }
 
   const handleTaskAdd = () => {
     
@@ -56,7 +62,8 @@ function App() {
         </div>
       </div>
 
-      <TaskList tasks={tasks} setTasks={setTasks} />
+      {/* <TaskList tasks={tasks} setTasks={setTasks} /> */}
+      <button onClick={handleSiginIn} className={cn("bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-400 active:bg-blue-300")}>Sign In</button>
 
       <div className="relative flex flex-row items-center justify-between px-8 w-full h-[8%] bg-blue-500 rounded-3xl">
         <div onClick={handleTaskAdd} className="absolute -top-8 left-1/2 -translate-x-1/2 flex items-center justify-center p-4 rounded-full bg-blue-500 border-4 border-black hover:bg-blue-400 active:bg-blue-300">

@@ -1,4 +1,4 @@
-import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithRedirect, signOut, getRedirectResult, GoogleAuthProvider } from "firebase/auth";
 import {app} from "./firebase-sdk";
 const provider = new GoogleAuthProvider();
 
@@ -17,6 +17,7 @@ export const signInWithGoogle = async () => {
       const user = result.user;
       // IdP data available using getAdditionalUserInfo(result)
       // ...
+      console.log("USER", user);
       return {user, token};
     }
   }catch(error) {
@@ -30,5 +31,13 @@ export const signInWithGoogle = async () => {
 
     console.log("Error during sign in with Google: ", errorCode, errorMessage, email, credential);
     // ...
+  }
+}
+
+export const signOutFromGoogle = async () => {
+  try {
+    await signOut(auth);
+  } catch(error) {
+    console.error("Error signing out", error);
   }
 }

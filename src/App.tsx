@@ -8,18 +8,18 @@ import TaskList from "./my-components/TaskList";
 import { Task } from "@/types"
 import { createTable, insertTask } from "./lib/db";
 
-import { signInWithGoogle } from "@/firebase/google-signin"
+import { signInWithGoogle, signOutFromGoogle } from "@/firebase/google-signin"
 
 function App() {
  
   const today = new Date();
   const [currDate, setCurrDate] = useState<Date>(today);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [user, setUser] = useState<any>(null);
 
   const initDb = async () => {
     try {
       const db = await createTable();
-      console.log("DB: ", db);
     } catch(error) {
       console.error("Error creating table", error);
     }
@@ -29,8 +29,14 @@ function App() {
     initDb();
   }, []);
 
-  const handleSiginIn = () => {
-    signInWithGoogle();
+  const handleSignIn = async () => {
+    const user = await signInWithGoogle();
+    setUser(user);
+    console.log("USER", user);
+  }
+
+  const handleSignOut = () => {
+    signOutFromGoogle();
   }
 
   const handleTaskAdd = () => {
@@ -63,7 +69,10 @@ function App() {
       </div>
 
       {/* <TaskList tasks={tasks} setTasks={setTasks} /> */}
-      <button onClick={handleSiginIn} className={cn("bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-400 active:bg-blue-300")}>Sign In</button>
+      {user 
+        ?<button onClick={handleSignOut} className={cn("bg-red-500 text-white p-2 rounded-lg hover:bg-red-400 active:bg-red-300")}>Sign Out</button>  
+        :<button onClick={handleSignIn} className={cn("bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-400 active:bg-blue-300")}>Sign In</button>
+      }
 
       <div className="relative flex flex-row items-center justify-between px-8 w-full h-[8%] bg-blue-500 rounded-3xl">
         <div onClick={handleTaskAdd} className="absolute -top-8 left-1/2 -translate-x-1/2 flex items-center justify-center p-4 rounded-full bg-blue-500 border-4 border-black hover:bg-blue-400 active:bg-blue-300">
